@@ -4,6 +4,7 @@ import { Check, Copy, Download, Loader2, Share2, Trash2 } from "lucide-react";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { copyToClipboard } from "@/lib/utils";
 import type { ProcessResult } from "@/types";
 
 interface ResultActionsProps {
@@ -70,13 +71,8 @@ export const ResultActions = memo(function ResultActions({
     }
 
     // Fallback: copy URL to clipboard
-    if (!navigator.clipboard) {
-      toast.error("Sharing not available on this device");
-      return;
-    }
-
     try {
-      await navigator.clipboard.writeText(result.processedUrl);
+      await copyToClipboard(result.processedUrl);
       copiedRef.current = true;
       forceRender({});
       toast.success("Copied to clipboard!");

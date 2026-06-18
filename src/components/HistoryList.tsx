@@ -5,6 +5,7 @@ import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { MAX_HISTORY_ITEMS } from "@/lib/constants";
+import { copyToClipboard } from "@/lib/utils";
 import type { HistoryItem } from "@/types";
 
 interface HistoryListProps {
@@ -136,34 +137,27 @@ export const HistoryList = memo(function HistoryList({
    * - forceRender triggers single re-render when feedback starts/ends
    * - Cleanup: clears previous timeout to prevent state collision
    */
-  const handleCopy = useCallback((url: string, id: string) => {
-    if (!navigator.clipboard) {
-      toast.error("Clipboard not available");
-      return;
-    }
+  const handleCopy = useCallback(async (url: string, id: string) => {
+    try {
+      await copyToClipboard(url);
+      copiedIdRef.current = id;
+      forceRender({});
+      toast.success("Copied to clipboard!");
 
-    navigator.clipboard
-      .writeText(url)
-      .then(() => {
-        copiedIdRef.current = id;
-        forceRender({});
-        toast.success("Copied to clipboard!");
+      // Clear existing timeout to prevent overlap on rapid clicks
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
 
-        // Clear existing timeout to prevent overlap on rapid clicks
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => {
+        if (copiedIdRef.current === id) {
+          copiedIdRef.current = null;
+          forceRender({});
         }
-
-        timeoutRef.current = setTimeout(() => {
-          if (copiedIdRef.current === id) {
-            copiedIdRef.current = null;
-            forceRender({});
-          }
-        }, 1600);
-      })
-      .catch(() => {
-        toast.error("Failed to copy. Please try again.");
-      });
+      }, 1600);
+    } catch {
+      toast.error("Failed to copy. Please try again.");
+    }
   }, []);
 
   if (items.length === 0) {
