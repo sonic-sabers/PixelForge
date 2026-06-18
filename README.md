@@ -1,6 +1,6 @@
 # PixelForge
 
-PixelForge is a full-stack image transformation web app built with Next.js. Drop an image, and PixelForge automatically removes the background using the Clipdrop AI API, flips it horizontally, and delivers a polished transparent PNG — all in a single click. Processed images are stored on Vercel Blob and can be downloaded, shared, or deleted directly from the UI.
+PixelForge is a full-stack image transformation web app built with Next.js. Drop an image, and PixelForge automatically removes the background using the Clipdrop AI API, flips it horizontally, and delivers a polished transparent PNG all in a single click. Processed images are stored on Vercel Blob and can be downloaded, shared, or deleted directly from the UI.
 
 ---
 
@@ -24,20 +24,20 @@ PixelForge is a full-stack image transformation web app built with Next.js. Drop
 
 ## Features
 
-- **Drag-and-drop upload** — Drop an image onto the dropzone or click to open the file browser
-- **Background removal** — Powered by the [Clipdrop API](https://clipdrop.co/apis/docs/remove-background); falls back to pass-through in local development
-- **Horizontal flip** — Applied to the cutout via [Jimp](https://github.com/jimp-dev/jimp) after background removal
-- **Transparent PNG output** — Result is always a clean `image/png`
-- **Cloud storage** — Processed images are uploaded to [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) with public access URLs
-- **Animated processing view** — Multi-stage progress bar with Framer Motion animations (respects `prefers-reduced-motion`)
-- **Side-by-side comparison** — Original vs. processed image shown after completion
-- **Download** — One-click PNG download using Blob API with fallback to new tab
-- **Share / Copy** — Native Web Share API on mobile; clipboard fallback on desktop
-- **Delete** — Removes image from both the UI and Vercel Blob storage; uses optimistic UI with rollback on failure
-- **Processing history** — Up to 5 recent results persisted in `localStorage` via `useSyncExternalStore`; items can be re-opened or deleted
-- **Client-side validation** — File type, size, and emptiness checked before upload
-- **Toast notifications** — Success and error feedback via [Sonner](https://sonner.emilkowal.ski/)
-- **Fully typed** — TypeScript throughout, including API response shapes and error codes
+- **Drag-and-drop upload** Drop an image onto the dropzone or click to open the file browser
+- **Background removal** Powered by the [Clipdrop API](https://clipdrop.co/apis/docs/remove-background); falls back to pass-through in local development
+- **Horizontal flip** Applied to the cutout via [Jimp](https://github.com/jimp-dev/jimp) after background removal
+- **Transparent PNG output** Result is always a clean `image/png`
+- **Cloud storage** Processed images are uploaded to [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) with public access URLs
+- **Animated processing view** Multi-stage progress bar with Framer Motion animations (respects `prefers-reduced-motion`)
+- **Side-by-side comparison** Original vs. processed image shown after completion
+- **Download** One-click PNG download using Blob API with fallback to new tab
+- **Share / Copy** Native Web Share API on mobile; clipboard fallback on desktop
+- **Delete** Removes image from both the UI and Vercel Blob storage; uses optimistic UI with rollback on failure
+- **Processing history** Up to 5 recent results persisted in `localStorage` via `useSyncExternalStore`; items can be re-opened or deleted
+- **Client-side validation** File type, size, and emptiness checked before upload
+- **Toast notifications** Success and error feedback via [Sonner](https://sonner.emilkowal.ski/)
+- **Fully typed** TypeScript throughout, including API response shapes and error codes
 
 ---
 
@@ -66,8 +66,8 @@ PixelForge is a full-stack image transformation web app built with Next.js. Drop
 src/
 ├── app/
 │   ├── api/
-│   │   ├── process/route.ts   # POST — upload, remove bg, flip, store
-│   │   └── delete/route.ts    # DELETE — remove image from Vercel Blob
+│   │   ├── process/route.ts   # POST upload, remove bg, flip, store
+│   │   └── delete/route.ts    # DELETE remove image from Vercel Blob
 │   ├── icon.tsx               # Generated app icon
 │   ├── layout.tsx             # Root layout, metadata, Toaster
 │   ├── not-found.tsx          # 404 page
@@ -111,16 +111,16 @@ The root client component. Owns all top-level state and wires the child componen
 
 **State managed:**
 
-- `selectedFile` / `previewUrl` — the file chosen by the user
-- `clientError` — validation error shown before upload
-- `deleteTarget` — tracks which item is pending deletion (`"result"` or `"history"`)
+- `selectedFile` / `previewUrl` the file chosen by the user
+- `clientError` validation error shown before upload
+- `deleteTarget` tracks which item is pending deletion (`"result"` or `"history"`)
 
 **Key responsibilities:**
 
 - Validates file client-side via `validateClientFile` before accepting selection
 - Calls `processFile` from `useImageProcessor` on submit
 - Adds result to history after successful processing
-- Implements **optimistic delete** — removes item from UI immediately, makes DELETE API call, rolls back with `toast.error` on failure
+- Implements **optimistic delete** removes item from UI immediately, makes DELETE API call, rolls back with `toast.error` on failure
 - Passes memoized props to all child components to prevent unnecessary re-renders
 
 ---
@@ -182,9 +182,9 @@ Side-by-side before/after view shown on completion.
 
 Action bar for the completed result.
 
-- **Share** — Uses Web Share API if available (mobile); falls back to clipboard copy
-- **Download** — Fetches the blob and triggers a file download as `pixelforge-<name>.png`; fallback opens the URL in a new tab
-- **Delete** — Triggers the delete confirmation dialog
+- **Share** Uses Web Share API if available (mobile); falls back to clipboard copy
+- **Download** Fetches the blob and triggers a file download as `pixelforge-<name>.png`; fallback opens the URL in a new tab
+- **Delete** Triggers the delete confirmation dialog
 
 Uses `useRef` + `forceRender` pattern for transient states (copying, downloading) to avoid triggering full component re-renders during async operations.
 
@@ -250,7 +250,7 @@ Deletes a processed image from Vercel Blob storage.
 { "pathname": "processed/<uuid>.png" }
 ```
 
-Path is validated with Zod — must start with `processed/`.
+Path is validated with Zod must start with `processed/`.
 
 **Response (200):**
 
@@ -291,7 +291,7 @@ Persists and reads the processing history from `localStorage`.
 - Uses `useSyncExternalStore` for React 18+ concurrent-safe access
 - Listens to both the native `storage` event (cross-tab sync) and a custom `pixelforge-history-change` event (same-tab sync)
 - Caches the last parsed value to keep a stable object reference between renders
-- Caps history at `MAX_HISTORY_ITEMS` (5) — oldest entries are dropped when the limit is reached
+- Caps history at `MAX_HISTORY_ITEMS` (5) oldest entries are dropped when the limit is reached
 - Gracefully handles `localStorage` being unavailable (e.g. private browsing)
 
 ---
@@ -310,8 +310,8 @@ Returns `false` on the server (no `window`), and the live media query result on 
 
 Core image processing logic.
 
-1. **Background removal** — POSTs to `https://clipdrop-api.co/remove-background/v1` with a 30-second `AbortController` timeout. In `NODE_ENV=development`, this step is skipped and the original buffer is passed through.
-2. **Horizontal flip** — Reads the result with Jimp and calls `image.flip({ horizontal: true })`.
+1. **Background removal** POSTs to `https://clipdrop-api.co/remove-background/v1` with a 30-second `AbortController` timeout. In `NODE_ENV=development`, this step is skipped and the original buffer is passed through.
+2. **Horizontal flip** Reads the result with Jimp and calls `image.flip({ horizontal: true })`.
 3. Returns a `ProcessedBuffer` with `{ buffer, width, height }`.
 
 ---
@@ -320,8 +320,8 @@ Core image processing logic.
 
 Vercel Blob wrappers.
 
-- `uploadProcessedImage(buffer, pathname)` — Uploads to `processed/<uuid>.png` with `access: "public"`. In `NODE_ENV=development`, returns a `data:` URI instead.
-- `deleteProcessedImage(pathname)` — Calls `del(pathname)`. No-ops in development.
+- `uploadProcessedImage(buffer, pathname)` Uploads to `processed/<uuid>.png` with `access: "public"`. In `NODE_ENV=development`, returns a `data:` URI instead.
+- `deleteProcessedImage(pathname)` Calls `del(pathname)`. No-ops in development.
 
 ---
 
@@ -329,9 +329,9 @@ Vercel Blob wrappers.
 
 Centralised error system.
 
-- `AppError` — extends `Error` with a typed `code` (from `ERROR_CODES`) and HTTP `status`
-- `errorResponse(error)` — converts any thrown value to a structured JSON `Response`
-- `mapClipdropStatus(status)` — maps Clipdrop HTTP status codes to `AppError` instances with user-friendly messages
+- `AppError` extends `Error` with a typed `code` (from `ERROR_CODES`) and HTTP `status`
+- `errorResponse(error)` converts any thrown value to a structured JSON `Response`
+- `mapClipdropStatus(status)` maps Clipdrop HTTP status codes to `AppError` instances with user-friendly messages
 - All error messages are defined in `ERROR_MESSAGES` keyed by `ErrorCode`
 
 ---
@@ -340,9 +340,9 @@ Centralised error system.
 
 Zod-based validation.
 
-- `DeleteSchema` — validates the delete request body (`pathname` must start with `processed/`)
-- `validateUploadFile(file)` — throws `AppError` if file is missing, empty, too large, or wrong type
-- `validateClientFile(file)` — same validation, returns an error string instead of throwing (used client-side)
+- `DeleteSchema` validates the delete request body (`pathname` must start with `processed/`)
+- `validateUploadFile(file)` throws `AppError` if file is missing, empty, too large, or wrong type
+- `validateClientFile(file)` same validation, returns an error string instead of throwing (used client-side)
 
 ---
 
@@ -362,7 +362,7 @@ MAX_IMAGE_DIMENSION; // 4000
 
 ### `lib/utils.ts`
 
-Exports `cn(...inputs)` — combines `clsx` and `tailwind-merge` for conditional class composition.
+Exports `cn(...inputs)` combines `clsx` and `tailwind-merge` for conditional class composition.
 
 ---
 
@@ -411,15 +411,15 @@ interface ApiErrorResponse {
 Create a `.env` file in the project root:
 
 ```bash
-# Required in production — Clipdrop background removal API key
+# Required in production Clipdrop background removal API key
 # Get one at https://clipdrop.co/apis
 CLIPDROP_API_KEY=
 
-# Required in production — Vercel Blob read/write token
+# Required in production Vercel Blob read/write token
 # Provided automatically on Vercel; create one in your Vercel project settings
 BLOB_READ_WRITE_TOKEN=
 
-# Optional — maximum upload size in MB (default: 10)
+# Optional maximum upload size in MB (default: 10)
 MAX_UPLOAD_SIZE_MB=10
 ```
 
@@ -444,7 +444,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-In development mode, API keys are not required — images are processed locally (no background removal) and stored as base64 data URIs.
+In development mode, API keys are not required images are processed locally (no background removal) and stored as base64 data URIs.
 
 ---
 
@@ -466,7 +466,7 @@ npm run lint
 1. Push the repo to GitHub/GitLab
 2. Import the project in [Vercel](https://vercel.com)
 3. Add the three environment variables in **Project Settings → Environment Variables**
-4. Deploy — Vercel automatically provisions a Blob store if `BLOB_READ_WRITE_TOKEN` is configured
+4. Deploy Vercel automatically provisions a Blob store if `BLOB_READ_WRITE_TOKEN` is configured
 
 ---
 
