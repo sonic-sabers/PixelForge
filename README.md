@@ -4,6 +4,10 @@ PixelForge is a full-stack image transformation web app built with Next.js. Drop
 
 ---
 
+## 🔗 Live Demo
+
+**Try it live:** [https://www.heyashish.dev/pixelforge](https://www.heyashish.dev/pixelforge)
+
 ## Preview
 
 | Landing                                    | Upload                                        |
