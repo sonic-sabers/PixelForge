@@ -168,9 +168,6 @@ export const HistoryList = memo(function HistoryList({
     <section className="mt-8">
       <div className="mb-3 flex items-end justify-between">
         <div>
-          <p className="text-sm font-medium text-primary">
-            Recent transformations
-          </p>
           <h2 className="text-xl font-semibold text-foreground">
             Recent results
           </h2>
