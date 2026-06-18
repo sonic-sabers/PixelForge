@@ -16,7 +16,11 @@ export async function processImage(
   originalName: string,
   mimeType: string,
 ): Promise<ProcessedBuffer> {
-  const backgroundRemoved = await removeBackground(inputBuffer, originalName, mimeType);
+  const backgroundRemoved = await removeBackground(
+    inputBuffer,
+    originalName,
+    mimeType,
+  );
 
   try {
     const image = await Jimp.read(backgroundRemoved);
@@ -62,7 +66,11 @@ async function removeBackground(
   try {
     const formData = new FormData();
     const fileBytes = new Uint8Array(inputBuffer);
-    formData.append("image_file", new Blob([fileBytes], { type: mimeType }), originalName);
+    formData.append(
+      "image_file",
+      new Blob([fileBytes], { type: mimeType }),
+      originalName,
+    );
 
     const response = await fetch(CLIPDROP_ENDPOINT, {
       method: "POST",
@@ -90,7 +98,11 @@ async function removeBackground(
     const output = Buffer.from(arrayBuffer);
 
     if (output.length === 0) {
-      throw new AppError(ERROR_CODES.NO_SUBJECT, "The result looks empty. Try a clearer image with a visible subject.", 422);
+      throw new AppError(
+        ERROR_CODES.NO_SUBJECT,
+        "No background could be removed. This might be because the image has a complex background or no clear subject. Try an image with a distinct object against a simple background.",
+        422,
+      );
     }
 
     return output;

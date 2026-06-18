@@ -25,12 +25,15 @@ const ERROR_MESSAGES: Record<ErrorCode, string> = {
   FILE_TOO_LARGE: "This image is too large. Please upload an image under 10MB.",
   EMPTY_FILE: "This file appears to be empty.",
   CORRUPT_IMAGE: "This image appears to be corrupted. Please try another file.",
-  NO_SUBJECT: "No clear subject was detected. Try a photo with one main object.",
+  NO_SUBJECT:
+    "No background could be removed. Try an image with a distinct object against a simple background.",
   BG_SERVICE_FAILED: "Background removal service is temporarily unavailable.",
-  BG_SERVICE_QUOTA: "Background removal quota is exhausted. Please try again later.",
+  BG_SERVICE_QUOTA:
+    "Background removal quota is exhausted. Please try again later.",
   BG_SERVICE_TIMEOUT: "Processing took too long. Please try a smaller image.",
   FLIP_FAILED: "Could not apply the flip. Please try again with another image.",
-  STORAGE_UPLOAD_FAILED: "Image was processed but could not be saved. Please try again.",
+  STORAGE_UPLOAD_FAILED:
+    "Image was processed but could not be saved. Please try again.",
   STORAGE_DELETE_FAILED: "Could not delete the image. Please try again.",
   INVALID_DELETE_PATH: "Invalid image path.",
   UNKNOWN: "Something went wrong. Please try again.",
@@ -90,7 +93,7 @@ export function mapClipdropStatus(status: number): AppError {
   if (status === 400) {
     return new AppError(
       ERROR_CODES.NO_SUBJECT,
-      "This image could not be processed. Try a clearer image with one main subject.",
+      "Background removal failed. This image may not have a clear subject or the background is too complex. Try a photo with one distinct object against a simple background.",
       422,
     );
   }
