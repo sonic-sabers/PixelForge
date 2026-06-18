@@ -4,8 +4,21 @@ PixelForge is a full-stack image transformation web app built with Next.js. Drop
 
 ---
 
+## Preview
+
+| Landing                                    | Upload                                        |
+| ------------------------------------------ | --------------------------------------------- |
+| ![Landing page](public/Images/landing.png) | ![Uploaded image](public/Images/Uploaded.png) |
+
+| Ready to process                                                            | Processed result                                |
+| --------------------------------------------------------------------------- | ----------------------------------------------- |
+| ![Uploaded, not yet processed](public/Images/Uploaded-n-yet-to-process.png) | ![Processed image](public/Images/Processed.png) |
+
+---
+
 ## Table of Contents
 
+- [Screenshots](#screenshots)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
